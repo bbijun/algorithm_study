@@ -1,25 +1,25 @@
 text = input()
 result = ""
-if "<" in text:
-    cnt = 1
-    text = text.split('>')
-    for mini_text in text:
-        close = mini_text.find('<')
-        if close == 0:
-            result += mini_text+">"
-        elif close == -1:
-            result += mini_text[::-1]+" "
+flag = False
+tmp_text = ""
+for char in text:
+    if char == " ":
+        if flag == True:
+            result += (tmp_text+char)
+            tmp_text = ""
         else:
-            first = mini_text[:close]
-            first = first.split()
-            for tmp in first:
-                result += tmp[::-1]+" "
-            result = result[:-1]
-            second = mini_text[close:]
-            result += (second+">")
-    print(result[:-1])
-else:
-    text = text.split()
-    for mini_text in text:
-        result += mini_text[::-1]+' '
-    print(result[:-1])
+            result += (tmp_text[::-1] + char)
+            tmp_text = ""
+    elif char == "<":
+        result += tmp_text[::-1]
+        tmp_text="<"
+        flag = True
+
+    elif char == ">":
+        result += (tmp_text+">")
+        tmp_text = ""
+        flag = False
+    else:
+        tmp_text += char
+result += tmp_text[::-1]
+print(result)
