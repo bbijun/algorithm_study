@@ -8,3 +8,4 @@ while len(p)>0:
             result+=1
             break
 print(result)
+
