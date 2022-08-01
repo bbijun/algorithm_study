@@ -28,14 +28,26 @@ def bfs(x,y, broken, maze):
                 return maze[x][y] +1
             if maze[nx][ny] == -1:
                 if b == 0:
-                    maze[nx][ny] = maze[x][y] + 1
-                    q.append((nx,ny,1))
+                    for j in range(4):
+                        nnx = nx + dx[i]
+                        nny = ny + dy[i]
+                        if nnx<= -1 or nnx >= n or nny <=-1 or nny >=m:
+                            continue
+                        if nnx == n - 1 and nny == m - 1:
+                            return maze[x][y] + 2
+                        if maze[nnx][nny] == -1:
+                            continue
+                        else:
+                            if maze[nnx][nny] == 0 or maze[nnx][nny] >= maze[nx][ny]:
+                                maze[nnx][nny] = maze[nx][ny] + 2
+                                q.append((nnx,nny,1))
                 else:
                     continue
             else:
                 if maze[nx][ny] == 0 or maze[nx][ny] >= maze[x][y]:
                     maze[nx][ny] = maze[x][y] + 1
                     q.append((nx, ny, b))
+        print(q)
     return -1
 
 print(bfs(0,0,0, maze))
