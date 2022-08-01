@@ -9,14 +9,12 @@ for i in range(n):
         if maze[i][j] == 1:
             maze[i][j] = -1
 maze[0][0] = 1
-visited = [[False for _ in range(m)] for _ in range(n)]
-visited[0][0] = True
 
 dx = [0, 1, 0, -1]
 dy = [1, 0, -1, 0]
 
 
-def bfs(x,y, broken, maze, visited):
+def bfs(x,y, broken, maze):
     q = deque()
     q.append((x,y,0))
     while q:
@@ -35,16 +33,12 @@ def bfs(x,y, broken, maze, visited):
                 else:
                     continue
             else:
-                if visited[nx][ny] == True:
-                    continue
-                else:
+                if maze[nx][ny] == 0 or maze[nx][ny] >= maze[x][y]:
                     maze[nx][ny] = maze[x][y] + 1
                     q.append((nx, ny, b))
-                    visited[nx][ny] = True
-        print(q)
     return -1
 
-print(bfs(0,0,0, maze, visited))
+print(bfs(0,0,0, maze))
 
 
 
