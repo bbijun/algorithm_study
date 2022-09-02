@@ -4,22 +4,36 @@
 """
 
 import sys
+import heapq
 input = sys.stdin.readline
 INF = int(1e9)
+def dijkstra(start):
+    distance = [INF] * (n+1)
+    distance[start] = 0
+    q = []
+    heapq.heappush(q, (0,start))
+    while q:
+        dist, now = heapq.heappop(q)
+        if distance[now] < dist:
+            continue
+        for i in graph[now]:
+            cost = dist + i[0]
+            if cost < distance[i[1]]:
+                distance[i[1]] = cost
+                heapq.heappush(q, (cost, i[1]))
+    return distance
+
+
 n, m, x = map(int, input().split())
 result = 0
-graph = [[INF] * (n+1) for _ in range(n+1)]
-for a in range(n+1):
-    graph[a][a] = 0
-
+final_distance = [[0]]
+graph = [[] for _ in range(n+1)]
 for _ in range(m):
-    s, e, t = map(int, input().split())
-    graph[s][e] = t
+    s,e,d = map(int, input().split())
+    graph[s].append((d,e))
 
-for k in range(1, n+1):
-    for start in range(1, n+1):
-        for end in range(1, n+1):
-            graph[start][end] = min(graph[start][end], graph[start][k] + graph[k][end])
-for k in range(1, n+1):
-    result = max(result, graph[k][x] + graph[x][k])
+for i in range(1, n+1):
+    final_distance.append(dijkstra(i))
+for i in range(1, n+1):
+    result = max(result, final_distance[i][x] + final_distance[x][i])
 print(result)
