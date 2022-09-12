@@ -11,32 +11,10 @@ from collections import deque
 import sys
 input = sys.stdin.readline
 
-def topological_sort(graph, indegree, build_time, k, w, visit):
-    result = 0
-    step = []
-    if indegree[w] == 0:
-        return build_time[w]
-    q = []
-    tmp = 0
-    for i in range(1, w+1):
-        if indegree[i] == 0 and i in visit:
-            q.append(i)
-            tmp = max(build_time[i], tmp)
-    result += tmp
-    tmp2 = []
-    while q:
-        result_tmp = 0
-        for item in q:
-            if item in visit and item not in tmp2:
-                tmp2.append(item)
-                result_tmp = max()
-
-
-    return -1 #불가능한 경우
-
 t = int(input())
 for _ in range(t):
     n, k = map(int, input().split())
+    dp = [0] * (n+1)
     graph = [[] for _ in range(n+1)]
     graph_reverse = [[] for _ in range(n+1)]
     indegree = [0] * (n+1)
@@ -47,21 +25,21 @@ for _ in range(t):
 
     for i in range(k):
         s, e = map(int, input().split())
-        graph_reverse[e].append(s)
         graph[s].append(e)
         indegree[e] += 1
     w = int(input())
+
     q = deque()
-    q.append(w)
-    visit = [] #방문해야하는 노드. indegree가 0이어도 visit의 원소가 아니면 거른다
+    for i in range(1, n+1):
+        if indegree[i] == 0:
+            q.append(i)
+            dp[i] = build_time[i]
     while q:
         now = q.popleft()
-        if now not in q:
-            visit.append(now)
-        for item in graph_reverse[now]:
-            if item not in q:
-                q.append(item)
-
-    #print(topological_sort(graph, indegree, build_time,k, w, visit))
-
+        for i in graph[now]:
+            indegree[i] -= 1
+            dp[i] = max(dp[i], dp[now] + build_time[i])
+            if indegree[i] == 0:
+                q.append(i)
+    print(dp[w])
 
