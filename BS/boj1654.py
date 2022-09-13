@@ -11,7 +11,8 @@ while start <= end:
     for line in l:
         tmp += line // mid
     if tmp >= n:
+        result = mid
         start = mid + 1
     elif tmp < n:
         end = mid - 1
-print(end)
+print(result)

@@ -9,6 +9,7 @@
 3트: 다익스트라 함수에서 distance배열을 선언하고 distance[start]를 0으로 수정해주지않아서
 틀린거였음
 """
+
 import sys
 import heapq
 input = sys.stdin.readline
