@@ -21,8 +21,12 @@ q = deque()
 q.append((x,y,0))
 maze[x][y] = 0
 visited[x][y] = True
+min_move = int(10e9)
 while q:
     x,y,move = q.popleft()
+    if move > min_move:continue
+    if maze[x][y] < weight:
+        
     for i in range(4):
         nx = x + dx[i]
         ny = y + dy[i]
@@ -40,7 +44,7 @@ while q:
             maze[nx][ny] = 0
             visited = [[False] * n for _ in range(n)]
             visited[nx][ny] = True
-            #print("(%d, %d), r= %d, w = %d" %(nx+1, ny+1, result, weight))
+            print("(%d, %d), r= %d, w = %d" %(nx+1, ny+1, result, weight))
             break
 
         elif maze[nx][ny] == weight or maze[nx][ny] == 0:
