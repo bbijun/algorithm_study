@@ -49,4 +49,5 @@ for _ in range(k):
         for i in range(n):
             for j in range(m):
                 result += find_target(i, j, target, maze)
+                answer_dic[target] = result
         print(result)
