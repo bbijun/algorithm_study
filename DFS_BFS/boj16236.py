@@ -7,9 +7,6 @@ dy = [0,-1,1,0]
 n = int(input())
 maze = []
 x = y = 0
-weight = 2
-count = 0
-visited = [[False] * n for _ in range(n)]
 
 for _ in range(n):
     tmp = list(map(int, input().split()))
@@ -17,43 +14,52 @@ for _ in range(n):
         x = _
         y = tmp.index(9)
     maze.append(tmp)
-q = deque()
-q.append((x,y,0))
 maze[x][y] = 0
-visited[x][y] = True
-min_move = int(10e9)
-while q:
-    x,y,move = q.popleft()
-    if move > min_move:continue
-    if maze[x][y] < weight:
-        
-    for i in range(4):
-        nx = x + dx[i]
-        ny = y + dy[i]
-        if nx >= len(maze) or nx <= -1 or ny >= len(maze) or ny <= -1 or maze[nx][ny] > weight:
-            continue
-        if 0 < maze[nx][ny] < weight:
-            q.clear()
-            count += 1
-            if count == weight:
-                weight += 1
-                count = 0
-            maze[nx][ny] = 0
-            result += move + 1
-            q.append((nx, ny, 0))
-            maze[nx][ny] = 0
-            visited = [[False] * n for _ in range(n)]
-            visited[nx][ny] = True
-            print("(%d, %d), r= %d, w = %d" %(nx+1, ny+1, result, weight))
-            break
 
-        elif maze[nx][ny] == weight or maze[nx][ny] == 0:
-            if not visited[nx][ny]:
-                visited[nx][ny] = True
-                q.append((nx, ny, move + 1))
+def move(x,y, weight, maze):
+    visited = [[False] * n for _ in range(n)]
+    found = False
+    q = deque()
+    min_distance = int(10e9)
+    candidate = []
+    q.append((x,y,0))
+    while q:
+        x, y, distance= q.popleft()
+        #visited[x][y] = True 44번째 줄 대신 이걸 쓰면 메모리 초과가 나는데 어차피 같은 방법 아닌가??
+        if 0< maze[x][y] < weight:
+            if not found:
+                min_distance = distance
+                found = True
+                candidate.append((x, y))
             else:
-                continue
-        else:
-            continue
-print(result)
+                if distance == min_distance:
+                    candidate.append((x, y))
+        elif maze[x][y] == weight or maze[x][y] == 0:
+            if distance < min_distance:
+                for i in range(4):
+                    nx = x + dx[i]
+                    ny = y + dy[i]
+                    if 0 <= nx < n and 0 <= ny < n and not visited[nx][ny]:
+                        q.append((nx,ny,distance+1))
+                        visited[nx][ny] = True
 
+    if len(candidate) == 0:
+        return False, -1, -1, -1
+    else:
+        candidate.sort()
+        return True, candidate[0][0], candidate[0][1], min_distance
+
+weight = 2
+count = 0
+while True:
+    flag, x, y, moves = move(x,y,weight, maze)
+    if flag:
+        count +=1
+        result += moves
+        if count == weight:
+            weight +=1
+            count = 0
+        maze[x][y] = 0
+    else:
+        break
+print(result)
