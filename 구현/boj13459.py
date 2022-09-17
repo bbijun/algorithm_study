@@ -50,7 +50,7 @@ q = deque()
 for i in range(1,4):
     q.append((red, blue, i))
 
-while(q):
+while q:
     red, blue, path = q.popleft()
     red_original = red[:]
     blue_original = blue[:]
@@ -68,7 +68,6 @@ while(q):
     else:
         maze[b1[1]][b1[2]] = 'B'
         maze[blue[0]][blue[1]] = '.'
-
 
     r2 = roll(r1, path, maze)
     if r2[0]:
